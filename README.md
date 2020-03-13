@@ -1,24 +1,24 @@
-# Guard::Brakeman [![Build Status](https://secure.travis-ci.org/guard/guard-brakeman.png)](http://travis-ci.org/oreoshake/guard-brakeman)
+# Guard::Railroader
 
-Guard::Brakeman allows you to automatically run [Brakeman](http://brakemanscanner.org/) tests when files are modified.
+Guard::Railroader allows you to automatically run [Railroader](https://railroader.org/) tests when files are modified.
 
 ## Install
 
 The simplest way to install Guard is to use [Bundler](http://gembundler.com/).
 Please make sure to have [Guard](https://github.com/guard/guard) installed before continue.
 
-Add Guard::Brakeman to your `Gemfile`:
+Add Guard::Railroader to your `Gemfile`:
 
 ```bash
 group :development do
-  gem 'guard-brakeman'
+  gem 'guard-railroader'
 end
 ```
 
-Add the default Guard::Brakeman template to your `Guardfile` by running:
+Add the default Guard::Railroader template to your `Guardfile` by running:
 
 ```bash
-$ guard init brakeman
+$ guard init railroader
 ```
 
 ## Use sublime Text 2?
@@ -31,10 +31,10 @@ Please read the [Guard usage documentation](https://github.com/guard/guard#readm
 
 ## Guardfile
 
-Guard::Brakeman can be adapted to all kind of projects and comes with a default template that looks like this:
+Guard::Railroader can be adapted to all kind of projects and comes with a default template that looks like this:
 
 ```ruby
-guard :brakeman, run_on_start: true do
+guard :railroader, run_on_start: true do
   watch(%r{^app/.+\.(erb|haml|rhtml|rb)$})
   watch(%r{^config/.+\.rb$})
   watch(%r{^lib/.+\.rb$})
@@ -49,8 +49,8 @@ Please read the [Guard documentation](http://github.com/guard/guard#readme) for 
 ### List of available options
 
 ```ruby
-:quiet          => false    # set the "quiet" option in brakeman (only results will be printed)
-:ignore_file    => 'config/brakeman.ignore'
+:quiet          => false    # set the "quiet" option in railroader (only results will be printed)
+:ignore_file    => 'config/railroader.ignore'
 :output_files   => %w(donkey.html) # write the results to the specified files
 :notifications  => false    # display Growl notifications, defaults to true
 :run_on_start   => true     # run all checks on startup, defaults to false
@@ -59,13 +59,13 @@ Please read the [Guard documentation](http://github.com/guard/guard#readme) for 
 :url_safe_methods => %w(method1 method2) # list methods which are safe for use in link_to URLs
 ```
 
-## Brakeman configuration
+## Railroader configuration
 
 Issues
 ------
 
-You can report issues and feature requests to [GitHub Issues](https://github.com/oreoshake/guard-brakeman/issues). Try to figure out
-where the issue belongs to: Is it an issue with Guard itself or with Guard::Brakeman? Please don't
+You can report issues and feature requests to [GitHub Issues](https://github.com/labtwentyfive/guard-railroader/issues). Try to figure out
+where the issue belongs to: Is it an issue with Guard itself or with Guard::Railroader? Please don't
 ask the question in the issue tracker, instead join us in our [Google group](http://groups.google.com/group/guard-dev) or on
 `#guard` (irc.freenode.net).
 
@@ -78,7 +78,7 @@ When you file an issue, please try to follow to these simple rules if applicable
 
 ## Development
 
-- Source hosted at [GitHub](https://github.com/netzpirat/guard-brakeman).
+- Source hosted at [GitHub](https://github.com/labtwentyfive/guard-railroader).
 
 Pull requests are very welcome! Please try to follow these simple rules if applicable:
 
@@ -87,9 +87,6 @@ Pull requests are very welcome! Please try to follow these simple rules if appli
 * Update the README.
 * Update the CHANGELOG for noteworthy changes.
 * Please **do not change** the version number.
-
-For questions please join us in our [Google group](http://groups.google.com/group/guard-dev) or on
-`#guard` (irc.freenode.net).
 
 ## Contributors
 

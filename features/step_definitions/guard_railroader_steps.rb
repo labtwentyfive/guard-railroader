@@ -1,6 +1,6 @@
 When /^I start guard$/ do
   run_simple('rm -f Guardfile')
-  run_simple('guard init brakeman')
+  run_simple('guard init railroader')
   @interactive = run('guard')
 end
 

@@ -1,23 +1,23 @@
 # Don't require "guard/plugin" here or in any other plugin's files
 require 'guard/compat/plugin'
 
-require 'brakeman'
-require 'brakeman/scanner'
+require 'railroader'
+require 'railroader/scanner'
 
 module Guard
 
-  # The Brakeman guard that gets notifications about the following
+  # The Railroader guard that gets notifications about the following
   # Guard events: `start`, `stop`, `reload`, `run_all` and `run_on_changes`.
   #
-  class Brakeman < Plugin
+  class Railroader < Plugin
     def initialize(options = { })
       super
 
-      ::Brakeman.instance_variable_set(:@quiet, options[:quiet])
+      ::Railroader.instance_variable_set(:@quiet, options[:quiet])
 
       if options[:skip_checks]
         options[:skip_checks] = options[:skip_checks].map do |val|
-          # mimic Brakeman::set_options behavior
+          # mimic Railroader::set_options behavior
           val[0,5] == "Check" ? val : "Check" << val
         end
       end
@@ -40,7 +40,7 @@ module Guard
         :min_confidence => 2,
         :quiet => false
       }.merge!(options)
-      @scanner_opts = ::Brakeman::set_options({:app_path => '.'}.merge(@options))
+      @scanner_opts = ::Railroader::set_options({:app_path => '.'}.merge(@options))
     end
 
     # Gets called once when Guard starts.
@@ -48,13 +48,13 @@ module Guard
     # @raise [:task_has_failed] when stop has failed
     #
     def start
-      @scanner_opts = ::Brakeman::set_options({:app_path => '.'}.merge(@options))
+      @scanner_opts = ::Railroader::set_options({:app_path => '.'}.merge(@options))
       @options.merge!(@scanner_opts)
 
       if @options[:run_on_start]
         run_all
       elsif @options[:chatty]
-        Guard::Compat::Notifier.notify("Brakeman is ready to work!", :title => "Brakeman started", :image => :pending)
+        Guard::Compat::Notifier.notify("Railroader is ready to work!", :title => "Railroader started", :image => :pending)
       end
     end
 
@@ -65,7 +65,7 @@ module Guard
     def run_all
       fail "no scanner opts (start not called?)!" if @scanner_opts.nil?
       tracker.run_checks
-      ::Brakeman.filter_warnings tracker, @scanner_opts
+      ::Railroader.filter_warnings tracker, @scanner_opts
       print_failed
       throw :task_has_failed if tracker.filtered_warnings.any?
     end
@@ -78,7 +78,7 @@ module Guard
     def run_on_changes paths
       return run_all unless tracker.checks
       info "\n\nrescanning #{paths}, running all checks" unless options[:quiet]
-      report = ::Brakeman::rescan(tracker, paths)
+      report = ::Railroader::rescan(tracker, paths)
       print_changed(report)
       throw :task_has_failed if report.any_warnings?
     end
@@ -86,14 +86,14 @@ module Guard
     private
 
     def tracker
-      @tracker ||= ::Brakeman::Scanner.new(@scanner_opts).process
+      @tracker ||= ::Railroader::Scanner.new(@scanner_opts).process
     end
 
     def print_failed
-      info "\n------ brakeman warnings --------\n" unless options[:quiet]
+      info "\n------ railroader warnings --------\n" unless options[:quiet]
       all_warnings = tracker.filtered_warnings
       icon = all_warnings.count > 0 ? :failed : :success
-      message = "#{all_warnings.count} brakeman findings"
+      message = "#{all_warnings.count} railroader findings"
 
       if @options[:output_files]
         write_report
@@ -101,7 +101,7 @@ module Guard
       end
 
       if @options[:chatty] && all_warnings.any?
-        Guard::Compat::UI.notify(message, :title => "Full Brakeman results", :image => icon)
+        Guard::Compat::UI.notify(message, :title => "Full Railroader results", :image => icon)
       end
 
       info(message, 'yellow')
@@ -109,7 +109,7 @@ module Guard
     end
 
     def print_changed report
-      info "\n------ brakeman warnings --------\n" unless options[:quiet]
+      info "\n------ railroader warnings --------\n" unless options[:quiet]
 
       message = []
       should_alert = false
@@ -203,7 +203,7 @@ module Guard
         :white
       end
 
-      msg = ::Brakeman::Warning::TEXT_CONFIDENCE[warning.confidence]
+      msg = ::Railroader::Warning::TEXT_CONFIDENCE[warning.confidence]
       output =  Guard::Compat::UI.color(msg, color)
       output << " - #{warning.warning_type} - #{warning.message}"
       output << " near line #{warning.line}" if warning.line
@@ -220,9 +220,9 @@ module Guard
       case
       when warning.file.nil? # This should never really happen
         nil
-      when warning.respond_to?(:relative_path) # For Brakeman < 4.5.1
+      when warning.respond_to?(:relative_path) # For Railroader < 4.5.1
         warning.relative_path
-      else # Must be new Brakeman::FilePath, Brakeman >= 4.5.1
+      else # Must be new Railroader::FilePath, Railroader >= 4.5.1
         warning.file.relative
       end
     end

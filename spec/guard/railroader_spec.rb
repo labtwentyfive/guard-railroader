@@ -1,16 +1,16 @@
 require 'guard/compat/test/helper'
-require 'guard/brakeman'
+require 'guard/railroader'
 
 # TODO
 # Barely covers happy case, ignores sad case
 # Pending tests
-RSpec.describe Guard::Brakeman do
+RSpec.describe Guard::Railroader do
   let(:default_options) { {:cli => '--stuff'} }
   let(:tracker) { double("tracker") }
   let(:report) { double("report").as_null_object }
 
   before(:each) do
-    @guard = Guard::Brakeman.new
+    @guard = Guard::Railroader.new
     allow(@guard).to receive(:decorate_warning)
     @guard.instance_variable_set(:@tracker, tracker)
     @guard.instance_variable_set(:@options, {:notifications => false, :app_path => 'tmp/aruba/default_app'})
@@ -21,8 +21,8 @@ RSpec.describe Guard::Brakeman do
   describe '#start' do
     let(:scanner) { double(:process => tracker) }
 
-    it 'lazily initializes brakeman by scanning all files' do
-      allow(::Brakeman::Scanner).to receive(:new).and_return(scanner)
+    it 'lazily initializes railroader by scanning all files' do
+      allow(::Railroader::Scanner).to receive(:new).and_return(scanner)
       expect(scanner).not_to receive(:process)
       @guard.start
     end
@@ -59,7 +59,7 @@ RSpec.describe Guard::Brakeman do
 
       it 'does not run the specified checks' do
         @guard.instance_variable_set(:@tracker, nil)
-        expect(::Brakeman::Scanner).to receive(:new).with(hash_including(options)).and_return(scanner)
+        expect(::Railroader::Scanner).to receive(:new).with(hash_including(options)).and_return(scanner)
         @guard.start
         @guard.send(:tracker)
       end
@@ -72,7 +72,7 @@ RSpec.describe Guard::Brakeman do
       expect(tracker).to receive(:run_checks)
       allow(tracker).to receive_message_chain(:checks, :all_warnings).and_return([])
       expect(tracker).to receive(:filtered_warnings).and_return([])
-      expect(::Brakeman).to receive(:filter_warnings).with(tracker, anything)
+      expect(::Railroader).to receive(:filter_warnings).with(tracker, anything)
       @guard.run_all
     end
   end
@@ -81,7 +81,7 @@ RSpec.describe Guard::Brakeman do
 
   describe '#run_on_change' do
     it 'rescans changed files, and checks all files' do
-      expect(::Brakeman).to receive(:rescan).with(tracker, ['files/file']).and_return(report)
+      expect(::Railroader).to receive(:rescan).with(tracker, ['files/file']).and_return(report)
       allow(report).to receive(:any_warnings?)
       expect(tracker).to receive(:checks).and_return([double("check")])
       @guard.run_on_changes(['files/file'])
@@ -109,7 +109,7 @@ RSpec.describe Guard::Brakeman do
         @guard.instance_variable_set(:@options, {:output_files => ['test.csv']})
       end
 
-      it 'writes the brakeman report to disk' do
+      it 'writes the railroader report to disk' do
         expect(@guard).to receive(:write_report)
         @guard.send :print_failed
       end
@@ -175,7 +175,7 @@ RSpec.describe Guard::Brakeman do
         @guard.instance_variable_set(:@options, {:output_files => ['test.csv']})
       end
 
-      it 'writes the brakeman report to disk' do
+      it 'writes the railroader report to disk' do
         expect(File).to receive(:open).with('test.csv', 'w')
         @guard.send :print_changed, report
       end

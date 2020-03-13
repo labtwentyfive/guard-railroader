@@ -1,11 +1,11 @@
 @no-clobber @aruba
-Feature: Guard brakeman
+Feature: Guard railroader
   Background:
     Given I cd to "default_app"
     When I start guard
     And I wait for Guard to become idle
 
-  Scenario: Starting guard-brakeman smoke test
+  Scenario: Starting guard-railroader smoke test
     Then guard should scan the application
 
   Scenario: Triggering a change event smoke test

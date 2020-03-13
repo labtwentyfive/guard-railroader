@@ -1,4 +1,4 @@
-require File.expand_path('../../../lib/guard/brakeman',  __FILE__)
+require File.expand_path('../../../lib/guard/railroader',  __FILE__)
 require 'aruba/cucumber'
 
 Before do
