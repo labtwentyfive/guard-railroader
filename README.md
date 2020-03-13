@@ -1,4 +1,4 @@
-# Guard::Railroader
+# Guard::Railroader [![Build Status](https://travis-ci.org/labtwentyfive/guard-railroader.svg?branch=master)](https://travis-ci.org/labtwentyfive/guard-railroader)
 
 Guard::Railroader allows you to automatically run [Railroader](https://railroader.org/) tests when files are modified.
 
